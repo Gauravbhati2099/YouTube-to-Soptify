@@ -1,6 +1,19 @@
 # 🎵 PlaylistAI
 
-Convert YouTube playlists into Spotify playlists using AI-powered song extraction and automatic playlist creation.
+![Flask](https://img.shields.io/badge/flask-black?style=for-the-badge&logo=flask)
+![Python](https://img.shields.io/badge/python-yellow?style=for-the-badge&logo=python)
+![YouTube API](https://img.shields.io/badge/YouTube_API-red?style=for-the-badge&logo=youtube)
+![Spotify API](https://img.shields.io/badge/Spotify_API-1DB954?style=for-the-badge&logo=spotify)
+![Ollama](https://img.shields.io/badge/Ollama-LLM-blue?style=for-the-badge)
+![AI](https://img.shields.io/badge/AI-powered-brightgreen?style=for-the-badge)
+![automation](https://img.shields.io/badge/automation-orange?style=for-the-badge)
+![music](https://img.shields.io/badge/music-conversion-lightblue?style=for-the-badge)
+![bidirectional](https://img.shields.io/badge/bidirectional-purple?style=for-the-badge)
+![ready-to-use](https://img.shields.io/badge/ready--to--use-green?style=for-the-badge)
+
+Convert playlists bidirectionally between YouTube and Spotify using AI-powered song extraction and automatic playlist creation.
+
+![PlaylistAI Interface](assets/project.png)
 
 PlaylistAI uses:
 
@@ -15,19 +28,25 @@ to automatically identify songs from YouTube playlist videos, find their Spotify
 
 # Features
 
-✅ Convert entire YouTube playlists
+✅ Convert YouTube playlists to Spotify
+
+✅ Convert Spotify playlists to YouTube
 
 ✅ AI-powered song and artist extraction
 
 ✅ Spotify playlist auto-creation
 
-✅ Detailed conversion report
+✅ YouTube video search and matching
+
+✅ Detailed conversion reports
 
 ✅ Supports large playlists
 
 ✅ Local LLM processing with Ollama
 
-✅ JSON API response
+✅ JSON API responses
+
+✅ Bidirectional playlist conversion
 
 ---
 
@@ -36,22 +55,35 @@ to automatically identify songs from YouTube playlist videos, find their Spotify
 ```text
 User
  │
- ▼
-Flask Web App
+ ├─── YouTube Playlist
+ │         │
+ │         ▼
+ │    Flask Web App
+ │         │
+ │         ├── YouTube API
+ │         │       ▼
+ │         │   Playlist Videos
+ │         │
+ │         ├── Ollama (Llama 3)
+ │         │       ▼
+ │         │ Song + Artist Extraction
+ │         │
+ │         └── Spotify API
+ │                 ▼
+ │           Spotify Playlist
  │
- ├── YouTube API
- │       ▼
- │   Playlist Videos
- │
- ├── Ollama (Llama 3)
- │       ▼
- │ Song + Artist Extraction
- │
- └── Spotify API
-         ▼
-   Playlist Creation
-         ▼
-      Spotify Playlist
+ └─── Spotify Playlist
+           │
+           ▼
+       Flask Web App
+           │
+           ├── Spotify API
+           │       ▼
+           │  Extract Tracks
+           │
+           └── YouTube API
+                   ▼
+             YouTube Videos
 ```
 
 ---
@@ -241,8 +273,10 @@ http://127.0.0.1:5000
 
 # Usage
 
+## YouTube → Spotify
+
 1. Paste a YouTube playlist URL.
-2. Click **Convert Playlist**.
+2. Click **Convert to Spotify**.
 3. PlaylistAI:
 
    * Fetches all videos.
@@ -252,9 +286,22 @@ http://127.0.0.1:5000
    * Adds matched tracks.
 4. Returns a conversion report.
 
+## Spotify → YouTube
+
+1. Paste a Spotify playlist URL.
+2. Click **Convert to YouTube**.
+3. PlaylistAI:
+
+   * Extracts all tracks from the playlist.
+   * Searches YouTube for each track.
+   * Returns direct YouTube video links.
+4. Returns a conversion report with video matches.
+
 ---
 
 # Example API Response
+
+## YouTube → Spotify
 
 ```json
 {
@@ -275,9 +322,35 @@ http://127.0.0.1:5000
 }
 ```
 
+## Spotify → YouTube
+
+```json
+{
+  "success": true,
+  "total_tracks": 50,
+  "matched_videos": 48,
+  "failed_tracks": 2,
+  "youtube_videos": [
+    "https://www.youtube.com/watch?v=xxxx",
+    "https://www.youtube.com/watch?v=yyyy"
+  ],
+  "results": [
+    {
+      "spotify_track": "Shape of You",
+      "spotify_artist": "Ed Sheeran",
+      "youtube_url": "https://www.youtube.com/watch?v=xxxx",
+      "youtube_title": "Ed Sheeran - Shape of You (Official Video)",
+      "success": true
+    }
+  ]
+}
+```
+
 ---
 
 # Workflow
+
+## YouTube → Spotify
 
 ```text
 YouTube Playlist
@@ -301,14 +374,38 @@ Track Upload
 Conversion Report
 ```
 
+## Spotify → YouTube
+
+```text
+Spotify Playlist
+        │
+        ▼
+Extract All Tracks
+        │
+        ▼
+YouTube Search (per track)
+        │
+        ▼
+Video Matching
+        │
+        ▼
+Generate Links
+        │
+        ▼
+Conversion Report
+```
+
 ---
 
 # Known Limitations
 
 * Private YouTube playlists are not supported.
+* Private Spotify playlists require user authentication.
 * Some remixes and live performances may not map correctly.
-* Accuracy depends on playlist title quality.
+* Accuracy depends on playlist title/track quality.
 * Spotify catalog availability varies by region.
+* YouTube reverse conversion returns search results (not auto-playlist creation).
+* Large playlists may take several minutes to process.
 
 ---
 
